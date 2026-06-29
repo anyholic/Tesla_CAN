@@ -1,6 +1,6 @@
 #include "Tesla_CAN.h"
 
-
+signal_t SCCM_rightStalkStatus            = {SCCM_rightStalk,     12, 3, -1, 0};  // 0x229, b12, 3b
 signal_t APP_tcStateMachine               = {APP_trafficControl,   2, 3, -1, 0};  // 0x25D, b2,  3b
 signal_t APP_tcControlType                = {APP_trafficControl,  11, 5, -1, 0};  // 0x25D, b11, 5b
 signal_t APP_tcControlLightState          = {APP_trafficControl,  24, 3, -1, 0};  // 0x25D, b24, 3b
@@ -15,7 +15,7 @@ signal_t UI_fsdStopsControlEnabled        = {UI_autopilotControl, 38, 1,  0, 0};
 signal_t UI_fsdContinueOnGreenWithCIPV    = {UI_autopilotControl, 39, 1,  0, 0};  // 0x3FD, b39, 1b
 signal_t UI_applyEceR79                   = {UI_autopilotControl, 19, 1,  1, 0};  // 0x3FD, b19, 1b
 signal_t UI_hardCoreSummon                = {UI_autopilotControl, 47, 1,  1, 0};  // 0x3FD, b20, 1b
-signal_t SCCM_rightStalkStatus            = {SCCM_rightStalk,     12, 3, -1, 0};  // 0x229, b12, 3b
+
 
 // ---------------------------------------------------------------------------
 // 라벨 테이블
@@ -79,6 +79,16 @@ const char* VCFRONT_indicatorInternal_state[] = {
   "ACTIVE_HIGH",
 };
 
+const char* SCCM_rightStalkStatus_state[] = {
+  "IDLE",
+  "UP_1",
+  "UP_2",
+  "DOWN_1",
+  "DOWN_2",
+  "INIT",
+  "SNA"
+};
+
 void beginCAN(gpio_num_t CAN_TX_PIN, gpio_num_t CAN_RX_PIN) {
   // Initialize configuration structures using macro initializers
   twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(CAN_TX_PIN, CAN_RX_PIN, TWAI_MODE_NORMAL);
@@ -95,14 +105,17 @@ void beginCAN(gpio_num_t CAN_TX_PIN, gpio_num_t CAN_RX_PIN) {
   xTaskCreatePinnedToCore(TaskCAN, "TaskCAN", 4096, NULL, 10, NULL, 1);
 }
 
-void printCAN(twai_message_t msg) {
-  Serial.printf("CAN ID: 0x%03X, ", msg.identifier);
-  Serial.printf("DLC: %d, ", msg.data_length_code);
-  Serial.printf("Data: ");
+String CAN2String(twai_message_t msg) {
+  String result = "";
+  result += "CAN ID: 0x" + String(msg.identifier, HEX) + ", ";
+  result += "DLC: " + String(msg.data_length_code) + ", ";
+  result += "Data: ";
   for (int i = 0; i < msg.data_length_code; i++) {
-      Serial.printf("%02X ", msg.data[i]);
+      result += String(msg.data[i], HEX) + " ";
   }
-  Serial.println();
+  result += "\n";
+  // Serial.print(result);
+  return result;
 }
 
 void sendCAN(twai_message_t msg) {

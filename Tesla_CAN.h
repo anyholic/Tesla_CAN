@@ -48,7 +48,7 @@ extern const char* VCFRONT_indicatorInternal_state[];
 extern "C" void TaskCAN(void *pvParameters);
 
 void beginCAN(gpio_num_t CAN_TX_PIN, gpio_num_t CAN_RX_PIN);
-void printCAN(twai_message_t msg);
+String CAN2String(twai_message_t msg);
 void sendCAN(twai_message_t msg);
 void setBit(uint8_t* data, uint8_t bit_index, bool value);
 uint8_t getByte(const uint8_t* data, uint8_t start_index, uint8_t bit_count);
