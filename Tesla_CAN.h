@@ -14,6 +14,7 @@ typedef struct {
 
 // CAN ID 정의
 enum {
+  SCCM_rightStalk      = 0x229,  //  553 VEH
   SCCM_leftStalk       = 0x249,  //  585 VEH, CH
   APP_trafficControl   = 0x25D,  //  605      CH, PARTY
   VCLEFT_switchStatus  = 0x3C2,  //  962 VEH, CH
@@ -36,6 +37,7 @@ extern signal_t UI_fsdStopsControlEnabled;
 extern signal_t UI_fsdContinueOnGreenWithCIPV;
 extern signal_t UI_applyEceR79;
 extern signal_t UI_hardCoreSummon;
+extern signal_t SCCM_rightStalkStatus;
 
 extern const char* APP_tcStateMachine_state[];
 extern const char* APP_tcControlType_state[];

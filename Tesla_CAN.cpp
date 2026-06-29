@@ -15,6 +15,7 @@ signal_t UI_fsdStopsControlEnabled        = {UI_autopilotControl, 38, 1,  0, 0};
 signal_t UI_fsdContinueOnGreenWithCIPV    = {UI_autopilotControl, 39, 1,  0, 0};  // 0x3FD, b39, 1b
 signal_t UI_applyEceR79                   = {UI_autopilotControl, 19, 1,  1, 0};  // 0x3FD, b19, 1b
 signal_t UI_hardCoreSummon                = {UI_autopilotControl, 47, 1,  1, 0};  // 0x3FD, b20, 1b
+signal_t SCCM_rightStalkStatus            = {SCCM_rightStalk,     12, 3, -1, 0};  // 0x229, b12, 3b
 
 // ---------------------------------------------------------------------------
 // 라벨 테이블
@@ -61,7 +62,7 @@ const char* APP_tcControlLightState_state[] = {
   "LIGHTSTATE_GREEN",
   "LIGHTSTATE_YELLOW",
   "LIGHTSTATE_OFF",
-  "LIGHTSTATE_WHITE",   // 원본 오타 LIGHTSTAET_WHITE 수정
+  "LIGHTSTATE_WHITE",
   "LIGHTSTATE_OTHER",
 };
 
