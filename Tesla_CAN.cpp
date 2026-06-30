@@ -4,6 +4,7 @@ signal_t SCCM_rightStalkStatus            = {SCCM_rightStalk,     12, 3, -1, 0};
 signal_t APP_tcStateMachine               = {APP_trafficControl,   2, 3, -1, 0};  // 0x25D, b2,  3b
 signal_t APP_tcControlType                = {APP_trafficControl,  11, 5, -1, 0};  // 0x25D, b11, 5b
 signal_t APP_tcControlLightState          = {APP_trafficControl,  24, 3, -1, 0};  // 0x25D, b24, 3b
+signal_t DAS_autopilotState               = {DAS_status,           0, 4, -1, 0};  // 0x399, b0,  4b
 signal_t VCLEFT_frontOccupancySwitch      = {VCLEFT_switchStatus, 50, 2,  0, 0};  // 0x3C2, b50, 2b, m0
 signal_t VCFRONT_indicatorLeftInternal    = {VCFRONT_lighting,    50, 2, -1, 0};  // 0x3F5, b50, 2b
 signal_t VCFRONT_indicatorRightInternal   = {VCFRONT_lighting,    52, 2, -1, 0};  // 0x3F5, b52, 2b
@@ -71,6 +72,20 @@ const char* VCLEFT_frontOccupancySwitch_state[] = {
   "OFF",
   "ON",
   "FAULT",
+};
+
+const char* DAS_autopilotState_state[] = {
+  "DISABLED",
+  "UNAVAILABLE",
+  "AVAILABLE",
+  "ACTIVE_NOMINAL",
+  "ACTIVE_RESTRICTED",
+  "ACTIVE_NAV",
+  "ACTIVE_FSD",
+  "ABORTING",
+  "ABORTED",
+  "FAULT",
+  "SNA"
 };
 
 const char* VCFRONT_indicatorInternal_state[] = {

@@ -17,6 +17,7 @@ enum {
   SCCM_rightStalk      = 0x229,  //  553 VEH
   SCCM_leftStalk       = 0x249,  //  585 VEH, CH
   APP_trafficControl   = 0x25D,  //  605      CH, PARTY
+  DAS_status           = 0x399,  //  921      CH
   VCLEFT_switchStatus  = 0x3C2,  //  962 VEH, CH
   VCFRONT_lighting     = 0x3F5,  // 1013 VEH, CH
   UI_autopilotControl  = 0x3FD,  // 1021      CH
@@ -38,12 +39,14 @@ extern signal_t UI_fsdContinueOnGreenWithCIPV;
 extern signal_t UI_applyEceR79;
 extern signal_t UI_hardCoreSummon;
 extern signal_t SCCM_rightStalkStatus;
+extern signal_t DAS_autopilotState;
 
 extern const char* APP_tcStateMachine_state[];
 extern const char* APP_tcControlType_state[];
 extern const char* APP_tcControlLightState_state[];
 extern const char* VCLEFT_frontOccupancySwitch_state[];
 extern const char* VCFRONT_indicatorInternal_state[];
+extern const char* DAS_autopilotState_state[];
 
 extern "C" void TaskCAN(void *pvParameters);
 
