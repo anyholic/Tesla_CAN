@@ -17,6 +17,8 @@ signal_t UI_fsdContinueOnGreenWithCIPV    = {UI_autopilotControl, 39, 1,  0, 0};
 signal_t UI_applyEceR79                   = {UI_autopilotControl, 19, 1,  1, 0};  // 0x3FD, b19, 1b
 signal_t UI_hardCoreSummon                = {UI_autopilotControl, 47, 1,  1, 0};  // 0x3FD, b20, 1b
 
+twai_handle_t can0_handle = NULL; 
+twai_handle_t can1_handle = NULL;
 
 // ---------------------------------------------------------------------------
 // 라벨 테이블
@@ -109,7 +111,7 @@ const char* SCCM_rightStalkStatus_state[] = {
   "SNA"
 };
 
-twai_handle_t beginCAN(gpio_num_t CAN_TX_PIN, gpio_num_t CAN_RX_PIN, int controller_id) {
+void beginCAN(gpio_num_t CAN_TX_PIN, gpio_num_t CAN_RX_PIN, int controller_id) {
   // Initialize configuration structures using macro initializers
   twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT_V2(controller_id, CAN_TX_PIN, CAN_RX_PIN, TWAI_MODE_NORMAL);
   twai_timing_config_t t_config = TWAI_TIMING_CONFIG_500KBITS();
@@ -123,7 +125,11 @@ twai_handle_t beginCAN(gpio_num_t CAN_TX_PIN, gpio_num_t CAN_RX_PIN, int control
   // Start TWAI driver
   ESP_ERROR_CHECK(twai_start_v2(handle));
 
-  return handle;
+  if (controller_id == 0) {
+    can0_handle = handle;
+  } else if (controller_id == 1) {
+    can1_handle = handle;
+  }
 }
 
 String CAN2String(twai_message_t msg) {
@@ -181,4 +187,11 @@ bool updateValue(const uint8_t *data, signal_t *state_var) {
         return true;
     }
     return false;
+}
+
+void oneRightStalk(twai_message_t msg) {
+  uint8_t SCCM_rightStalkCounter = ((msg.data[1] & 0x0F) + 1) & 0x0F;
+  msg.data[0] = magicBytes229[SCCM_rightStalkCounter];
+  msg.data[1] = 0x30 | SCCM_rightStalkCounter;
+  sendCAN(can0_handle, msg);
 }
