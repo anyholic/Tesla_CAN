@@ -14,14 +14,17 @@ typedef struct {
 
 // CAN ID 정의
 enum {
-  SCCM_rightStalk      = 0x229,  //  553 VEH
-  SCCM_leftStalk       = 0x249,  //  585 VEH, CH
-  APP_trafficControl   = 0x25D,  //  605      CH, PARTY
-  DAS_status           = 0x399,  //  921      CH
-  VCLEFT_switchStatus  = 0x3C2,  //  962 VEH, CH
-  VCFRONT_lighting     = 0x3F5,  // 1013 VEH, CH
-  UI_autopilotControl  = 0x3FD,  // 1021      CH
-  UI_frontSeatRequests = 0x4F3   // 1267 VEH 
+  SCCM_steeringAngleSensor  = 0x129,  //  297 VEH, CH, PARTY
+  SCCM_rightStalk           = 0x229,  //  553 VEH
+  SCCM_leftStalk            = 0x249,  //  585 VEH, CH
+  APP_trafficControl        = 0x25D,  //  605      CH, PARTY
+  EPAS3S_sysStatus          = 0x370,  //  880      CH
+  DAS_status                = 0x399,  //  921      CH
+  VCLEFT_switchStatus       = 0x3C2,  //  962 VEH, CH
+  VCFRONT_lighting          = 0x3F5,  // 1013 VEH, CH
+  UI_driverAssistControl    = 0x3F8,  // 1016      CH
+  UI_autopilotControl       = 0x3FD,  // 1021      CH
+  UI_frontSeatRequests      = 0x4F3   // 1267 VEH 
 };
 
 const uint8_t magicBytes229[16] = { 0x49, 0x4B, 0x5D, 0x62, 0x4C, 0x4E, 0xD2, 0xF6, 0x43, 0xAA, 0xF9, 0x83, 0x46, 0x20, 0x3E, 0x34 };
@@ -30,6 +33,8 @@ const uint8_t magicBytes229[16] = { 0x49, 0x4B, 0x5D, 0x62, 0x4C, 0x4E, 0xD2, 0x
 extern signal_t APP_tcStateMachine;
 extern signal_t APP_tcControlType;
 extern signal_t APP_tcControlLightState;
+extern signal_t EPAS3S_handsOnLevel;
+extern signal_t DAS_autopilotState;
 extern signal_t VCLEFT_frontOccupancySwitch;
 extern signal_t VCFRONT_indicatorLeftInternal;
 extern signal_t VCFRONT_indicatorRightInternal;
@@ -42,7 +47,7 @@ extern signal_t UI_fsdContinueOnGreenWithCIPV;
 extern signal_t UI_applyEceR79;
 extern signal_t UI_hardCoreSummon;
 extern signal_t SCCM_rightStalkStatus;
-extern signal_t DAS_autopilotState;
+extern signal_t UI_alcOffHighwayEnable;
 
 extern const char* APP_tcStateMachine_state[];
 extern const char* APP_tcControlType_state[];

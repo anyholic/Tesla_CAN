@@ -1,21 +1,24 @@
 #include "Tesla_CAN.h"
 
-signal_t SCCM_rightStalkStatus            = {SCCM_rightStalk,     12, 3, -1, 0};  // 0x229, b12, 3b
-signal_t APP_tcStateMachine               = {APP_trafficControl,   2, 3, -1, 0};  // 0x25D, b2,  3b
-signal_t APP_tcControlType                = {APP_trafficControl,  11, 5, -1, 0};  // 0x25D, b11, 5b
-signal_t APP_tcControlLightState          = {APP_trafficControl,  24, 3, -1, 0};  // 0x25D, b24, 3b
-signal_t DAS_autopilotState               = {DAS_status,           0, 4, -1, 0};  // 0x399, b0,  4b
-signal_t VCLEFT_frontOccupancySwitch      = {VCLEFT_switchStatus, 50, 2,  0, 0};  // 0x3C2, b50, 2b, m0
-signal_t VCFRONT_indicatorLeftInternal    = {VCFRONT_lighting,    50, 2, -1, 0};  // 0x3F5, b50, 2b
-signal_t VCFRONT_indicatorRightInternal   = {VCFRONT_lighting,    52, 2, -1, 0};  // 0x3F5, b52, 2b
-signal_t UI_frontRightSeatTrackForward    = {UI_frontSeatRequests, 0, 1, -1, 0};  // 0x4F3, b0,  1b
-signal_t UI_frontRightSeatTrackBack       = {UI_frontSeatRequests, 1, 1, -1, 0};  // 0x4F3, b1,  1b
-signal_t UI_frontRightSeatBackrestBack    = {UI_frontSeatRequests, 4, 1, -1, 0};  // 0x4F3, b4,  1b
-signal_t UI_frontRightSeatBackrestForward = {UI_frontSeatRequests, 5, 1, -1, 0};  // 0x4F3, b5,  1b
-signal_t UI_fsdStopsControlEnabled        = {UI_autopilotControl, 38, 1,  0, 0};  // 0x3FD, b38, 1b
-signal_t UI_fsdContinueOnGreenWithCIPV    = {UI_autopilotControl, 39, 1,  0, 0};  // 0x3FD, b39, 1b
-signal_t UI_applyEceR79                   = {UI_autopilotControl, 19, 1,  1, 0};  // 0x3FD, b19, 1b
-signal_t UI_hardCoreSummon                = {UI_autopilotControl, 47, 1,  1, 0};  // 0x3FD, b20, 1b
+signal_t SCCM_rightStalkStatus            = {SCCM_rightStalk,        12, 3, -1, 0};  // 0x229, b12, 3b
+signal_t APP_tcStateMachine               = {APP_trafficControl,      2, 3, -1, 0};  // 0x25D, b2,  3b
+signal_t APP_tcControlType                = {APP_trafficControl,     11, 5, -1, 0};  // 0x25D, b11, 5b
+signal_t APP_tcControlLightState          = {APP_trafficControl,     24, 3, -1, 0};  // 0x25D, b24, 3b
+signal_t EPAS3S_handsOnLevel              = {EPAS3S_sysStatus,       39, 2, -1, 0};  // 0x370, b39, 2b
+signal_t DAS_autopilotState               = {DAS_status,              0, 4, -1, 0};  // 0x399, b0,  4b
+signal_t VCLEFT_frontOccupancySwitch      = {VCLEFT_switchStatus,    50, 2,  0, 0};  // 0x3C2, b50, 2b, m0
+signal_t VCFRONT_indicatorLeftInternal    = {VCFRONT_lighting,       50, 2, -1, 0};  // 0x3F5, b50, 2b
+signal_t VCFRONT_indicatorRightInternal   = {VCFRONT_lighting,       52, 2, -1, 0};  // 0x3F5, b52, 2b
+signal_t UI_frontRightSeatTrackForward    = {UI_frontSeatRequests,    0, 1, -1, 0};  // 0x4F3, b0,  1b
+signal_t UI_frontRightSeatTrackBack       = {UI_frontSeatRequests,    1, 1, -1, 0};  // 0x4F3, b1,  1b
+signal_t UI_frontRightSeatBackrestBack    = {UI_frontSeatRequests,    4, 1, -1, 0};  // 0x4F3, b4,  1b
+signal_t UI_frontRightSeatBackrestForward = {UI_frontSeatRequests,    5, 1, -1, 0};  // 0x4F3, b5,  1b
+signal_t UI_fsdStopsControlEnabled        = {UI_autopilotControl,    38, 1,  0, 0};  // 0x3FD, b38, 1b
+signal_t UI_fsdContinueOnGreenWithCIPV    = {UI_autopilotControl,    39, 1,  0, 0};  // 0x3FD, b39, 1b
+signal_t UI_applyEceR79                   = {UI_autopilotControl,    19, 1,  1, 0};  // 0x3FD, b19, 1b
+signal_t UI_hardCoreSummon                = {UI_autopilotControl,    47, 1,  1, 0};  // 0x3FD, b20, 1b
+signal_t UI_alcOffHighwayEnable           = {UI_driverAssistControl, 56, 1,  1, 0};  // 0x3F8, b56, 1b
+
 
 twai_handle_t can0_handle = NULL; 
 twai_handle_t can1_handle = NULL;
@@ -190,7 +193,7 @@ bool updateValue(const uint8_t *data, signal_t *state_var) {
 }
 
 void oneRightStalk(twai_message_t msg) {
-  uint8_t SCCM_rightStalkCounter = ((msg.data[1] & 0x0F) + 1) & 0x0F;
+  uint8_t SCCM_rightStalkCounter = (msg.data[1] + 1) & 0x0F;
   msg.data[0] = magicBytes229[SCCM_rightStalkCounter];
   msg.data[1] = 0x30 | SCCM_rightStalkCounter;
   sendCAN(can0_handle, msg);
