@@ -139,8 +139,8 @@ String CAN2String(twai_message_t msg) {
   return result;
 }
 
-void sendCAN(twai_message_t msg) {
-  if (twai_transmit(&msg, pdMS_TO_TICKS(100)) != ESP_OK) {
+void sendCAN(twai_handle_t handle, twai_message_t msg) {
+  if (twai_transmit_v2(handle, &msg, pdMS_TO_TICKS(100)) != ESP_OK) {
     Serial.println("[CAN] 송신 실패");
   }
 }
