@@ -82,8 +82,13 @@ const char* DAS_autopilotState_state[] = {
   "ACTIVE_RESTRICTED",
   "ACTIVE_NAV",
   "ACTIVE_FSD",
+  "NULL",
   "ABORTING",
   "ABORTED",
+  "NULL",
+  "NULL",
+  "NULL",
+  "NULL",
   "FAULT",
   "SNA"
 };
