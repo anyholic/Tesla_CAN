@@ -104,20 +104,21 @@ const char* SCCM_rightStalkStatus_state[] = {
   "SNA"
 };
 
-void beginCAN(gpio_num_t CAN_TX_PIN, gpio_num_t CAN_RX_PIN) {
+twai_handle_t beginCAN(gpio_num_t CAN_TX_PIN, gpio_num_t CAN_RX_PIN, int controller_id) {
   // Initialize configuration structures using macro initializers
-  twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(CAN_TX_PIN, CAN_RX_PIN, TWAI_MODE_NORMAL);
+  twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT_V2(controller_id, CAN_TX_PIN, CAN_RX_PIN, TWAI_MODE_NORMAL);
   twai_timing_config_t t_config = TWAI_TIMING_CONFIG_500KBITS();
   twai_filter_config_t f_config = TWAI_FILTER_CONFIG_ACCEPT_ALL();
 
+  twai_handle_t handle = NULL;
+
   // Install TWAI driver
-  ESP_ERROR_CHECK(twai_driver_install(&g_config, &t_config, &f_config));
+  ESP_ERROR_CHECK(twai_driver_install_v2(&g_config, &t_config, &f_config, &handle));
 
   // Start TWAI driver
-  ESP_ERROR_CHECK(twai_start());
+  ESP_ERROR_CHECK(twai_start_v2(handle));
 
-  // Task 생성: xTaskCreatePinnedToCore(함수, 이름, 스택크기, 파라미터, 우선순위, 핸들, 코어번호)
-  xTaskCreatePinnedToCore(TaskCAN, "TaskCAN", 4096, NULL, 10, NULL, 1);
+  return handle;
 }
 
 String CAN2String(twai_message_t msg) {
