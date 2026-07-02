@@ -9,11 +9,12 @@ typedef struct {
   uint8_t   bit;    // 시작 비트
   uint8_t   len;    // 비트 길이
   int8_t    mux;
-  uint8_t   value;
+  uint16_t  value;
 } signal_t;
 
 // CAN ID 정의
 enum {
+  EPAS3P_sysStatus          = 0x052,  //   82      CH
   SCCM_steeringAngleSensor  = 0x129,  //  297 VEH, CH, PARTY
   SCCM_rightStalk           = 0x229,  //  553 VEH
   SCCM_leftStalk            = 0x249,  //  585 VEH, CH
@@ -30,6 +31,7 @@ enum {
 const uint8_t magicBytes229[16] = { 0x49, 0x4B, 0x5D, 0x62, 0x4C, 0x4E, 0xD2, 0xF6, 0x43, 0xAA, 0xF9, 0x83, 0x46, 0x20, 0x3E, 0x34 };
 // const uint8_t magicBytes249[16] = { 0x9B, 0xE8, 0x2A, 0xD3, 0xD3, 0x83, 0x4C, 0x5E, 0x3F, 0x5E, 0xE2, 0x28, 0x3A, 0x13, 0xAF, 0xCE };
 
+extern signal_t SCCM_steeringAngle;
 extern signal_t APP_tcStateMachine;
 extern signal_t APP_tcControlType;
 extern signal_t APP_tcControlLightState;
@@ -48,6 +50,7 @@ extern signal_t UI_applyEceR79;
 extern signal_t UI_hardCoreSummon;
 extern signal_t SCCM_rightStalkStatus;
 extern signal_t UI_alcOffHighwayEnable;
+extern signal_t SCCM_rightStalkCounter;
 
 extern const char* APP_tcStateMachine_state[];
 extern const char* APP_tcControlType_state[];
@@ -62,10 +65,12 @@ extern twai_handle_t can1_handle;
 void beginCAN(gpio_num_t CAN_TX_PIN, gpio_num_t CAN_RX_PIN, int controller_id = 0);
 String CAN2String(twai_message_t msg);
 void sendCAN(twai_handle_t handle, twai_message_t msg);
-void setBit(uint8_t* data, uint8_t bit_index, bool value);
-uint8_t getByte(const uint8_t* data, uint8_t start_index, uint8_t bit_count);
-uint8_t getMux(const uint8_t* data, uint8_t bits);
-bool updateValue(const uint8_t *data, signal_t *state_var);
+void setBit(twai_message_t msg, uint8_t bit_index, bool value);
+uint16_t getByte(twai_message_t msg, uint8_t start_index, uint8_t bit_count);
+void setByte(twai_message_t &msg, uint8_t start_index, uint8_t bit_count, uint16_t value);
+uint16_t getMux(twai_message_t msg, uint8_t bits);
+bool getSignal(twai_message_t msg, signal_t *signal);
+void setSignal(twai_message_t &msg, signal_t *signal);
 void oneRightStalk(twai_message_t msg);
 
 #endif
